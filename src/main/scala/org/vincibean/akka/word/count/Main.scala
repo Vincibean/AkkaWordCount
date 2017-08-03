@@ -10,12 +10,12 @@ import org.vincibean.akka.word.count.actors.WordCounterActor.StartProcessFileMsg
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-object Main extends App {
+object Main {
 
-  lazy val defaultFileName = "all-shakespeare.txt"
-  lazy val defaultFilePath = this.getClass.getClassLoader.getResource(defaultFileName).getPath
+  lazy val defaultFileName: String = "all-shakespeare.txt"
+  lazy val defaultFilePath: String = this.getClass.getClassLoader.getResource(defaultFileName).getPath
 
-  override def main(args: Array[String]) {
+  def main(args: Array[String]) {
     implicit val ec = global
     val system = ActorSystem()
     val filePath = args.headOption.getOrElse(defaultFilePath)
