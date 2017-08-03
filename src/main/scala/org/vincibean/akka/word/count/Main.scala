@@ -5,7 +5,10 @@ import akka.dispatch.ExecutionContexts._
 import akka.pattern.ask
 import akka.util.Timeout
 import org.vincibean.akka.word.count.actors.WordCounterActor
-import org.vincibean.akka.word.count.actors.WordCounterActor.StartProcessFileMsg
+import org.vincibean.akka.word.count.actors.WordCounterActor.{
+  ProcessedFileMsg,
+  StartProcessFileMsg
+}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -23,9 +26,10 @@ object Main {
     val actor = system.actorOf(WordCounterActor.props(filePath))
     implicit val timeout = Timeout(25 seconds)
     val future = actor ? StartProcessFileMsg
-    future.map { result =>
-      println("Total number of words " + result)
-      system.terminate()
+    future.map {
+      case ProcessedFileMsg(result) =>
+        println("Total number of words " + result)
+        system.terminate()
     }
   }
 }

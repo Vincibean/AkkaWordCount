@@ -5,11 +5,17 @@ import org.vincibean.akka.word.count.actors.StringCounterActor.{
   ProcessStringMsg,
   StringProcessedMsg
 }
-import org.vincibean.akka.word.count.actors.WordCounterActor.StartProcessFileMsg
+import org.vincibean.akka.word.count.actors.WordCounterActor.{
+  ProcessedFileMsg,
+  StartProcessFileMsg
+}
+
+import scala.io.Source
 
 object WordCounterActor {
 
   case object StartProcessFileMsg
+  case class ProcessedFileMsg(wordCount: Int)
 
   def props(filePath: String): Props = Props(new WordCounterActor(filePath))
 
@@ -30,9 +36,9 @@ class WordCounterActor(filename: String) extends Actor with ActorLogging {
       } else {
         running = true
         fileSender = Some(sender) // save reference to process invoker
-        import scala.io.Source._
-        fromFile(filename).getLines.foreach { line =>
-          context.actorOf(StringCounterActor.props) ! ProcessStringMsg(line)
+        Source.fromFile(filename).getLines.foreach { line =>
+          val stringCounter = context.actorOf(StringCounterActor.props)
+          stringCounter ! ProcessStringMsg(line)
           totalLines += 1
         }
       }
@@ -40,7 +46,7 @@ class WordCounterActor(filename: String) extends Actor with ActorLogging {
       result += words
       linesProcessed += 1
       if (linesProcessed == totalLines) {
-        fileSender.foreach(_ ! result) // provide result to process invoker
+        fileSender.foreach(_ ! ProcessedFileMsg(result)) // provide result to process invoker
       }
     case msg => log.error(s"Unrecognized message $msg")
   }
