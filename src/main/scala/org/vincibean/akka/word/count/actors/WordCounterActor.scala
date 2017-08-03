@@ -9,7 +9,7 @@ import org.vincibean.akka.word.count.actors.WordCounterActor.StartProcessFileMsg
 
 object WordCounterActor {
 
-  case class StartProcessFileMsg()
+  case object StartProcessFileMsg
 
 }
 
@@ -22,7 +22,7 @@ class WordCounterActor(filename: String) extends Actor {
   private var fileSender: Option[ActorRef] = None
 
   def receive: Receive = {
-    case StartProcessFileMsg() =>
+    case StartProcessFileMsg =>
       if (running) {
         // println just used for example purposes;
         // Akka logger should be used instead

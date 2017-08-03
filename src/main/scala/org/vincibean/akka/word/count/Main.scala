@@ -22,7 +22,7 @@ object Main {
     val filePath = args.headOption.getOrElse(defaultFilePath)
     val actor = system.actorOf(Props(new WordCounterActor(filePath)))
     implicit val timeout = Timeout(25 seconds)
-    val future = actor ? StartProcessFileMsg()
+    val future = actor ? StartProcessFileMsg
     future.map { result =>
       println("Total number of words " + result)
       system.terminate()
