@@ -20,7 +20,7 @@ object Main {
     implicit val ec = global
     val system = ActorSystem()
     val filePath = args.headOption.getOrElse(defaultFilePath)
-    val actor = system.actorOf(Props(new WordCounterActor(filePath)))
+    val actor = system.actorOf(WordCounterActor.props(filePath))
     implicit val timeout = Timeout(25 seconds)
     val future = actor ? StartProcessFileMsg
     future.map { result =>

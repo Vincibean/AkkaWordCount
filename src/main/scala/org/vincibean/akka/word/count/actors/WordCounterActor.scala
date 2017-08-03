@@ -11,6 +11,8 @@ object WordCounterActor {
 
   case object StartProcessFileMsg
 
+  def props(filePath: String): Props = Props(new WordCounterActor(filePath))
+
 }
 
 class WordCounterActor(filename: String) extends Actor {
@@ -32,7 +34,7 @@ class WordCounterActor(filename: String) extends Actor {
         fileSender = Some(sender) // save reference to process invoker
         import scala.io.Source._
         fromFile(filename).getLines.foreach { line =>
-          context.actorOf(Props[StringCounterActor]) ! ProcessStringMsg(line)
+          context.actorOf(StringCounterActor.props) ! ProcessStringMsg(line)
           totalLines += 1
         }
       }
