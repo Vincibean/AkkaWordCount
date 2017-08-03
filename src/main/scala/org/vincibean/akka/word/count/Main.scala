@@ -13,7 +13,8 @@ import scala.language.postfixOps
 object Main {
 
   lazy val defaultFileName: String = "all-shakespeare.txt"
-  lazy val defaultFilePath: String = this.getClass.getClassLoader.getResource(defaultFileName).getPath
+  lazy val defaultFilePath: String =
+    this.getClass.getClassLoader.getResource(defaultFileName).getPath
 
   def main(args: Array[String]) {
     implicit val ec = global

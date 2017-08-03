@@ -1,7 +1,10 @@
 package org.vincibean.akka.word.count.actors
 
 import akka.actor.{Actor, ActorRef, Props}
-import org.vincibean.akka.word.count.actors.StringCounterActor.{ProcessStringMsg, StringProcessedMsg}
+import org.vincibean.akka.word.count.actors.StringCounterActor.{
+  ProcessStringMsg,
+  StringProcessedMsg
+}
 import org.vincibean.akka.word.count.actors.WordCounterActor.StartProcessFileMsg
 
 object WordCounterActor {
