@@ -19,7 +19,7 @@ object Main {
   lazy val defaultFilePath: String =
     this.getClass.getClassLoader.getResource(defaultFileName).getPath
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     implicit val ec = global
     val system = ActorSystem()
     val filePath = args.headOption.getOrElse(defaultFilePath)
