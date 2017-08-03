@@ -1,6 +1,6 @@
 package org.vincibean.akka.word.count
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.dispatch.ExecutionContexts._
 import akka.pattern.ask
 import akka.util.Timeout
