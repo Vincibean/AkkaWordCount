@@ -12,10 +12,14 @@ import scala.language.postfixOps
 
 object Main extends App {
 
+  lazy val defaultFileName = "all-shakespeare.txt"
+  lazy val defaultFilePath = this.getClass.getClassLoader.getResource(defaultFileName).getPath
+
   override def main(args: Array[String]) {
     implicit val ec = global
     val system = ActorSystem()
-    val actor = system.actorOf(Props(new WordCounterActor(args(0))))
+    val filePath = args.headOption.getOrElse(defaultFilePath)
+    val actor = system.actorOf(Props(new WordCounterActor(filePath)))
     implicit val timeout = Timeout(25 seconds)
     val future = actor ? StartProcessFileMsg()
     future.map { result =>
