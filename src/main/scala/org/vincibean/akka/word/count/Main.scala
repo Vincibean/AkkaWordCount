@@ -26,7 +26,7 @@ object Main {
     val actor = system.actorOf(WordCounterActor.props(filePath))
     implicit val timeout = Timeout(25 seconds)
     val future = actor ? StartProcessingFile
-    future.map {
+    future.foreach {
       case FileProcessed(result) =>
         println("Total number of words " + result)
         system.terminate()
