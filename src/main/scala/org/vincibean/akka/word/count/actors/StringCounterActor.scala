@@ -19,7 +19,7 @@ class StringCounterActor extends Actor with ActorLogging {
 
   def receive: Receive = {
     case ProcessString(string) =>
-      val wordsInLine = string.split(" ").length
+      val wordsInLine = string.split("""\W+""").length
       sender ! StringProcessed(wordsInLine)
     case msg => log.error(s"Unrecognized message $msg")
 
