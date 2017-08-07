@@ -22,8 +22,6 @@ object WordCounterActor {
 }
 
 class WordCounterActor(filename: String) extends Actor with ActorLogging {
-
-  private var running = false
   private var totalLines = 0
   private var linesProcessed = 0
   private var result = 0
@@ -31,17 +29,13 @@ class WordCounterActor(filename: String) extends Actor with ActorLogging {
 
   def receive: Receive = {
     case StartProcessingFile =>
-      if (running) {
-        log.warning("Duplicate start message received")
-      } else {
-        running = true
-        fileSender = Some(sender) // save reference to process invoker
-        Source.fromFile(filename).getLines.foreach { line =>
-          val stringCounter = context.actorOf(StringCounterActor.props)
-          stringCounter ! ProcessString(line)
-          totalLines += 1
-        }
+      fileSender = Some(sender) // save reference to process invoker
+      Source.fromFile(filename).getLines.foreach { line =>
+        val stringCounter = context.actorOf(StringCounterActor.props)
+        stringCounter ! ProcessString(line)
+        totalLines += 1
       }
+
     case StringProcessed(words) =>
       result += words
       linesProcessed += 1
