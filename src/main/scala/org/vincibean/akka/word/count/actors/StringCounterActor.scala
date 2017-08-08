@@ -9,8 +9,7 @@ import org.vincibean.akka.word.count.actors.StringCounterActor.{
 object StringCounterActor {
 
   case class ProcessString(string: String)
-
-  case class StringProcessed(words: Integer)
+  case class StringProcessed(wordCountInLine: Map[String, Int])
 
   def props: Props = Props[StringCounterActor]
 }
@@ -19,8 +18,12 @@ class StringCounterActor extends Actor with ActorLogging {
 
   def receive: Receive = {
     case ProcessString(string) =>
-      val wordsInLine = string.toLowerCase.split("""\W+""").count(_.nonEmpty)
-      sender ! StringProcessed(wordsInLine)
+      val wordCountInLine = string.toLowerCase
+        .split("""\W+""")
+        .filter(_.nonEmpty)
+        .groupBy(identity)
+        .mapValues(_.length)
+      sender ! StringProcessed(wordCountInLine)
     case msg => log.error(s"Unrecognized message $msg")
 
   }

@@ -14,8 +14,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 object Main {
-
-  lazy val defaultFileName: String = "all-shakespeare.txt"
+  lazy val defaultFileName: String = "hamlet.txt"
   lazy val defaultFilePath: String =
     this.getClass.getClassLoader.getResource(defaultFileName).getPath
 
@@ -28,7 +27,7 @@ object Main {
     val future = actor ? StartProcessingFile
     future.foreach {
       case FileProcessed(result) =>
-        println("Total number of words " + result)
+        println("Total number of words " + result.toSeq.sortBy(-_._2))
         system.terminate()
     }
   }
