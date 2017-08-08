@@ -20,11 +20,11 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     implicit val ec = global
-    val system = ActorSystem()
-    val filePath = args.headOption.getOrElse(defaultFilePath)
-    val actor = system.actorOf(WordCounterActor.props(filePath))
     implicit val timeout = Timeout(25 seconds)
-    val future = actor ? StartProcessingFile
+    val system = ActorSystem()
+    val actor = system.actorOf(WordCounterActor.props)
+    val filePath = args.headOption.getOrElse(defaultFilePath)
+    val future = actor ? StartProcessingFile(filePath)
     future.foreach {
       case FileProcessed(result) =>
         println("Total number of words " + result.toSeq.sortBy(-_._2))

@@ -14,21 +14,21 @@ import scala.io.Source
 
 object WordCounterActor {
 
-  case object StartProcessingFile
+  case class StartProcessingFile(filename: String)
   case class FileProcessed(wordCount: Map[String, Int])
 
-  def props(filePath: String): Props = Props(new WordCounterActor(filePath))
+  def props: Props = Props[WordCounterActor]
 
 }
 
-class WordCounterActor(filename: String) extends Actor with ActorLogging {
+class WordCounterActor extends Actor with ActorLogging {
   private var totalLines = 0
   private var linesProcessed = 0
   private var lineResults: Seq[Map[String, Int]] = Seq.empty[Map[String, Int]]
   private var fileSender: Option[ActorRef] = None
 
   def receive: Receive = {
-    case StartProcessingFile =>
+    case StartProcessingFile(filename) =>
       fileSender = Some(sender) // save reference to process invoker
       val lines = Source.fromFile(filename).getLines.toStream
       totalLines = lines.size
