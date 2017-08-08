@@ -27,7 +27,8 @@ object Main {
     val future = actor ? StartProcessingFile(filePath)
     future.foreach {
       case FileProcessed(result) =>
-        println("Total number of words " + result.toSeq.sortBy(-_._2))
+        println(s"""Word Count result:
+             |${result.toSeq.sortBy(-_._2).mkString("\n")}""".stripMargin)
         system.terminate()
     }
   }
