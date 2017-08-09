@@ -2,8 +2,8 @@ package org.vincibean.akka.word.count.actors
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import org.vincibean.akka.word.count.actors.StringCounterActor.{
-  ProcessString,
-  StringProcessed
+  ProcessLine,
+  LineProcessed
 }
 import org.vincibean.akka.word.count.actors.WordCounterActor.{
   FileProcessed,
@@ -34,10 +34,10 @@ class WordCounterActor extends Actor with ActorLogging {
       totalLines = lines.size
       lines.foreach { line =>
         val stringCounter = context.actorOf(StringCounterActor.props)
-        stringCounter ! ProcessString(line)
+        stringCounter ! ProcessLine(line)
       }
 
-    case StringProcessed(wordCountsInLine) =>
+    case LineProcessed(wordCountsInLine) =>
       lineResults = lineResults :+ wordCountsInLine
       linesProcessed += 1
       if (linesProcessed >= totalLines) {
